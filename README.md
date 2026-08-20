@@ -1,86 +1,49 @@
-# electron-vite
+# Electron + Vite starter
 
-An Electron application with React, TypeScript, Vite, and shadcn/ui.
+My desktop app starting point for Electron, React, TypeScript, Tailwind CSS, and shadcn/ui.
 
-## Stack
+It keeps Electron's main process, preload code, and React renderer in separate TypeScript projects. Context isolation stays enabled, and the renderer imports app code through the `@` alias.
 
-- **Electron** - Desktop app framework
-- **React 19** - UI library
-- **Vite 7** - Build tool
-- **TypeScript** - Type safety
-- **Tailwind CSS v4** - Styling
-- **shadcn/ui** - Component library
-- **electron-vite** - Build tooling
-- **electron-builder** - Packaging
+## Included setup
 
-## Project Structure
+- Electron and electron-vite for local development
+- React 19 and Vite 7 for the renderer
+- Tailwind CSS 4 and shadcn/ui
+- ESLint, Prettier, and separate Node and web type checks
+- electron-builder targets for Windows, macOS, and Linux
+- electron-updater configuration for packaged builds
 
-```
-src/
-├── main/           # Electron main process (Node.js)
-├── preload/        # Preload scripts (context bridge)
-└── renderer/       # React app (Chromium)
-    └── src/
-        ├── components/ui/   # shadcn components
-        ├── lib/utils.ts     # Utility functions (cn helper)
-        └── App.tsx          # Root component
-```
-
-## Setup
-
-### Install Dependencies
+## Start a project
 
 ```bash
+git clone https://github.com/KigoJomo/electron-vite.git my-desktop-app
+cd my-desktop-app
 pnpm install
-```
-
-### Development
-
-```bash
 pnpm dev
 ```
 
-### Build
+The useful source directories are:
+
+| Path | Runs in |
+| --- | --- |
+| `src/main` | Electron main process |
+| `src/preload` | Isolated bridge exposed to the renderer |
+| `src/renderer` | React app inside Chromium |
+
+## Checks
 
 ```bash
-# For Windows
+pnpm lint
+pnpm typecheck
+pnpm build
+```
+
+`pnpm build` compiles the app but does not create an installer. Use one of the packaging commands when you need an artifact.
+
+```bash
 pnpm build:win
-
-# For macOS
 pnpm build:mac
-
-# For Linux
 pnpm build:linux
 ```
 
-### Adding shadcn Components
-
-```bash
-# Add a component
-npx shadcn@latest add button
-
-# Add multiple components
-npx shadcn@latest add button dialog card
-```
-
-## Key Configuration Files
-
-| File                      | Purpose                               |
-| ------------------------- | ------------------------------------- |
-| `electron.vite.config.ts` | Vite config for main/preload/renderer |
-| `electron-builder.yml`    | Packaging config for installers       |
-| `components.json`         | shadcn CLI configuration              |
-| `tsconfig.web.json`       | TypeScript config with path aliases   |
-
-## Path Aliases
-
-The project uses these path aliases:
-
-- `@/*` → `src/renderer/src/*` (for shadcn components)
-- `@renderer/*` → `src/renderer/src/*` (legacy)
-
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/)
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+Those targets still need to be tested on their respective operating systems. Cross-platform packaging is not the same as running the finished app there.
